@@ -9,7 +9,8 @@ const Logout = (props)=> {
   }
   return(
     <>
-      {user.name} is logged in<button onClick={logMeOut}>logout</button>
+      {user.name? user.name: user.username} is logged in
+      <button onClick={logMeOut}>logout</button>
     </>
   )
 }

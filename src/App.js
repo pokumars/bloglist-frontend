@@ -5,6 +5,7 @@ import LoginForm from './components/LoginForm';
 import Logout from './components/Logout';
 import loginService from './services/login';
 import BlogForm from './components/BlogForm';
+import Notification from './components/Notification';
 
 const App = () => {
   const [blogs, setBlogs] = useState([]);
@@ -14,6 +15,7 @@ const App = () => {
   const [title, setTitle] = useState('');
   const [author, setAuthor] = useState('');
   const [url, setUrl] = useState('');
+  const [promptMessage, setPropmptMessage] = useState(null);
 
   const getBlogsHook = () => {
     const getBlogs = async ()=> {
@@ -36,6 +38,17 @@ const App = () => {
   }
   useEffect(getBrowserTokenHook, []);
 
+  const notify= (msg, positive)=> {
+    setPropmptMessage({
+      message: msg,
+      positive: positive
+    });
+
+    setTimeout(()=> {
+      setPropmptMessage(null);
+    }, 5000);
+  }
+
   const handleLogin = async (event) =>{
     event.preventDefault()
     console.log('login with ', username, password);
@@ -48,12 +61,15 @@ const App = () => {
       window.localStorage.setItem(
         'loggedInUser', JSON.stringify(user)
       );
-      console.log(user);
+
       setUsername('');
       setPassword('');
+
+      notify(`Welcome ${user.name? user.name :user.username}`, true);
+      
       blogService.setToken(user.token);
     } catch (error) {
-      console.error("wrong credentials");
+      notify(`wrong credentials`, false);
     }
   }
 
@@ -64,6 +80,7 @@ const App = () => {
       title.length<5 &&alert("title should be longer than 5 characters");
       author.length<3  && alert("author should be longer than 3 characters");
       url.length<10 && alert("url should be longer than 10 characters");
+      
       return null;
     }
 
@@ -79,6 +96,15 @@ const App = () => {
     const response = await blogService.create(newBlog);
 
     setBlogs(blogs.concat(response));
+
+    setPropmptMessage({
+      message: `${response.title} has been added to blogs`,
+      positive: true
+    });
+
+    setTimeout(()=> {
+      setPropmptMessage(null);
+    }, 5000);
 
     setAuthor('');
     setTitle('');
@@ -104,11 +130,15 @@ const App = () => {
     );
 
   }
+  const logout = () => {
+    setUser(null);
+    notify('Logged out successfully', true)
+  }
 
   //renders everything once user is signed in
   const renderBlogs = () => {
     return (<>
-      <Logout user={user} clearUser={() => setUser(null)}/>
+      <Logout user={user} clearUser={logout}/>
       <h2>Blogs</h2>
       <ol>
         {blogs.map(b => 
@@ -120,6 +150,7 @@ const App = () => {
 
   return(
     <>
+      <Notification message={promptMessage}/>
       {user === null
       ? renderLoginForm()
       : renderBlogs()}
