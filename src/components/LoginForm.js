@@ -5,6 +5,7 @@ const LoginForm = (props) => {
     username, password, handlePasswordChange } = props 
   return(
   <>
+    <h2>Log in to application</h2>
     <form onSubmit={handleLogin}>
       <div>
         username 
