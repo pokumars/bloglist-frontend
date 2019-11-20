@@ -21,7 +21,8 @@ const App = () => {
   const getBlogsHook = () => {
     const getBlogs = async ()=> {
       const blogs = await blogService.getAll();
-      setBlogs(blogs);
+      const sortedBlogs = blogs.sort((a, b) => a.likes - b.likes);
+      setBlogs(sortedBlogs);
       console.log(blogs);
     }
     getBlogs();
