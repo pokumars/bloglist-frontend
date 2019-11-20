@@ -6,6 +6,7 @@ import Logout from './components/Logout';
 import loginService from './services/login';
 import BlogForm from './components/BlogForm';
 import Notification from './components/Notification';
+import Togglable from './components/Togglable';
 
 const App = () => {
   const [blogs, setBlogs] = useState([]);
@@ -76,7 +77,7 @@ const App = () => {
   const createBlog = async (event) => {
     event.preventDefault();
 
-    if ( title.length<5 || author.length<3 || url.length<10) {
+    if ( title.length<5 || author.length<3 || url.length<5) {
       title.length<5 &&alert("title should be longer than 5 characters");
       author.length<3  && alert("author should be longer than 3 characters");
       url.length<10 && alert("url should be longer than 10 characters");
@@ -120,13 +121,16 @@ const App = () => {
       handlePasswordChange= {(value) => setPassword(value)}/>
     );
   }
+
   const renderBlogForm = () => {
     return (
-      <BlogForm handleCreateBlog={createBlog} 
+      <Togglable buttonLabel="add blog" >
+        <BlogForm handleCreateBlog={createBlog} 
           title={title} author={author} url={url}
           handleTitleChange={(value) => setTitle(value)}
           handleAuthorChange= {(value) => setAuthor(value)}
           handleUrlChange={(value) => setUrl(value)}/>
+      </Togglable>
     );
 
   }
@@ -137,7 +141,8 @@ const App = () => {
 
   //renders everything once user is signed in
   const renderBlogs = () => {
-    return (<>
+    return (
+    <>
       <Logout user={user} clearUser={logout}/>
       <h2>Blogs</h2>
       <ol>

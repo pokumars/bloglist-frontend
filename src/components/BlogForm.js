@@ -8,15 +8,30 @@ const BlogForm = (props) => {
   return (
     <>
       <form onSubmit= {handleCreateBlog}>
-        title <input value={title} type= "text" minLength="5" required
-        onChange={({ target }) => handleTitleChange(target.value)} /><br/>
-        
+        <table>
+          <tbody>
+            <tr>
+              <td>title</td> 
+              <td><input value={title} type= "text" minLength="5" required
+            onChange={({ target }) => handleTitleChange(target.value)} /></td>
+            </tr>
 
-        author <input value={author} type= "text" minLength="3" required
-        onChange={({ target }) => handleAuthorChange(target.value)} /><br/>
+            <tr>
+              <td>author</td>
+              <td><input value={author} type= "text" minLength="3" required
+                onChange={({ target }) => handleAuthorChange(target.value)} />
+              </td>
+            </tr>
 
-        url <input value={url} type= "url" required
-        onChange={({ target }) => handleUrlChange(target.value)} /><br/>
+            <tr>
+              <td>url</td>
+              <td>
+                <input value={url} type= "url" required
+                  onChange={({ target }) => handleUrlChange(target.value)} />
+              </td>
+            </tr>
+          </tbody>
+        </table>
 
         <button type="submit" >create</button>
       </form>
