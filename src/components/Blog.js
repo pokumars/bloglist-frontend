@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 
 const Blog = (props) => {
-  const { blog } = props;
+  const { blog, addLike } = props;
   const [expanded, setExpanded] = useState(false);
   
   const expandStyle = {display: expanded? '': 'none'};
@@ -18,7 +18,7 @@ const Blog = (props) => {
       </div>
 
       <div style = {expandStyle}>
-        {blog.likes} likes <button>like</button>
+        <p> {blog.likes} likes <button onClick={ addLike } >like</button> </p>
         <p><a href={blog.url}>{blog.url}</a><br/>
         added by {blog.user.name? blog.user.name: blog.user.username}</p>
       </div>

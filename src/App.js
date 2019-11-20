@@ -74,6 +74,22 @@ const App = () => {
     }
   }
 
+  const addLike = async (blogObjToUpdate) => {
+
+    const blog = {
+      "title": blogObjToUpdate.title,
+      "author": blogObjToUpdate.author,
+      "url": blogObjToUpdate.url,
+      "user":blogObjToUpdate.user.id,
+      "_id": blogObjToUpdate.id,
+      "likes": blogObjToUpdate.likes + 1,
+    }
+
+    const response = await blogService.update(blog);
+
+    setBlogs(blogs.map((b) => b.id ===blog._id.toString()? b = response : b));
+  };
+
   const createBlog = async (event) => {
     event.preventDefault();
 
@@ -147,7 +163,9 @@ const App = () => {
       <h2>Blogs</h2>
       <ol>
         {blogs.map(b => 
-        <li key={b.id} type="I"><Blog key={b.id} blog={b}/></li>)}
+        <li key={b.id} type="I">
+          <Blog key={b.id} blog={b} addLike={() => addLike(b)}/>
+        </li>)}
       </ol>
       {renderBlogForm()}
     </>)
