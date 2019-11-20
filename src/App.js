@@ -7,6 +7,8 @@ import loginService from './services/login';
 import BlogForm from './components/BlogForm';
 import Notification from './components/Notification';
 import Togglable from './components/Togglable';
+import Footer from './components/Footer';
+
 
 const App = () => {
   const [blogs, setBlogs] = useState([]);
@@ -53,7 +55,7 @@ const App = () => {
 
   const handleLogin = async (event) =>{
     event.preventDefault()
-    console.log('login with ', username, password);
+    //console.log('login with ', username, password);
     try {
       const user = await loginService.login({
         username, password
@@ -90,6 +92,23 @@ const App = () => {
 
     setBlogs(blogs.map((b) => b.id ===blog._id.toString()? b = response : b));
   };
+
+  const deleteBlog = async (blog) => {
+    try {
+      const confirmMessage = window.confirm(`Remove ${blog.title}`);
+      if(confirmMessage) {
+        const response = await blogService.deleteBlog(blog.id);
+        console.log(response);
+        notify('deleted successfully', true);
+        setBlogs(blogs.filter((b) => b.id !== blog.id));
+      }
+      
+    } catch (error) {
+      notify('deletion failed', false);
+    }
+
+    
+  }
 
   const createBlog = async (event) => {
     event.preventDefault();
@@ -158,6 +177,7 @@ const App = () => {
 
   //renders everything once user is signed in
   const renderBlogs = () => {
+    console.log(user);
     return (
     <>
       <Logout user={user} clearUser={logout}/>
@@ -165,7 +185,10 @@ const App = () => {
       <ol>
         {blogs.map(b => 
         <li key={b.id} type="I">
-          <Blog key={b.id} blog={b} addLike={() => addLike(b)}/>
+          <Blog key={b.id} blog={b}
+           addLike={() => addLike(b)}
+           user={user}
+           deleteBlog={() => deleteBlog(b)}/>
         </li>)}
       </ol>
       {renderBlogForm()}
@@ -178,6 +201,7 @@ const App = () => {
       {user === null
       ? renderLoginForm()
       : renderBlogs()}
+      <Footer />
     </>
   )
 }
