@@ -21,14 +21,14 @@ const App = () => {
   const [promptMessage, setPropmptMessage] = useState(null);
 
   const getBlogsHook = () => {
-    const getBlogs = async ()=> {
+    const getBlogs = async () => {
       const blogs = await blogService.getAll();
       const sortedBlogs = blogs.sort((a, b) => a.likes - b.likes);
       setBlogs(sortedBlogs);
       console.log(blogs);
-    }
+    };
     getBlogs();
-  }
+  };
   useEffect(getBlogsHook, []);
 
   const getBrowserTokenHook = () => {
@@ -39,22 +39,22 @@ const App = () => {
       setUser(user);
       blogService.setToken(user.token);
     }
-  }
+  };
   useEffect(getBrowserTokenHook, []);
 
-  const notify= (msg, positive)=> {
+  const notify= (msg, positive) => {
     setPropmptMessage({
       message: msg,
       positive: positive
     });
 
-    setTimeout(()=> {
+    setTimeout(() => {
       setPropmptMessage(null);
     }, 5000);
-  }
+  };
 
-  const handleLogin = async (event) =>{
-    event.preventDefault()
+  const handleLogin = async (event) => {
+    event.preventDefault();
     //console.log('login with ', username, password);
     try {
       const user = await loginService.login({
@@ -70,23 +70,23 @@ const App = () => {
       setPassword('');
 
       notify(`Welcome ${user.name? user.name :user.username}`, true);
-      
+
       blogService.setToken(user.token);
     } catch (error) {
-      notify(`wrong credentials`, false);
+      notify('wrong credentials', false);
     }
-  }
+  };
 
   const addLike = async (blogObjToUpdate) => {
 
     const blog = {
-      "title": blogObjToUpdate.title,
-      "author": blogObjToUpdate.author,
-      "url": blogObjToUpdate.url,
-      "user":blogObjToUpdate.user.id,
-      "_id": blogObjToUpdate.id,
-      "likes": blogObjToUpdate.likes + 1,
-    }
+      'title': blogObjToUpdate.title,
+      'author': blogObjToUpdate.author,
+      'url': blogObjToUpdate.url,
+      'user':blogObjToUpdate.user.id,
+      '_id': blogObjToUpdate.id,
+      'likes': blogObjToUpdate.likes + 1,
+    };
 
     const response = await blogService.update(blog);
 
@@ -102,30 +102,30 @@ const App = () => {
         notify('deleted successfully', true);
         setBlogs(blogs.filter((b) => b.id !== blog.id));
       }
-      
+
     } catch (error) {
       notify('deletion failed', false);
     }
 
-    
-  }
+
+  };
 
   const createBlog = async (event) => {
     event.preventDefault();
 
     if ( title.length<5 || author.length<3 || url.length<5) {
-      title.length<5 &&alert("title should be longer than 5 characters");
-      author.length<3  && alert("author should be longer than 3 characters");
-      url.length<10 && alert("url should be longer than 10 characters");
-      
+      title.length<5 &&alert('title should be longer than 5 characters');
+      author.length<3  && alert('author should be longer than 3 characters');
+      url.length<10 && alert('url should be longer than 10 characters');
+
       return null;
     }
 
     const newBlog = {
-      "title": title,
-      "author": author,
-      "url": url,
-    }
+      'title': title,
+      'author': author,
+      'url': url,
+    };
 
     //console.log('new blog to be posted ', newBlog);
     //console.log(`author--> ${author} title--> ${title} url--> ${url}`);
@@ -139,29 +139,29 @@ const App = () => {
       positive: true
     });
 
-    setTimeout(()=> {
+    setTimeout(() => {
       setPropmptMessage(null);
     }, 5000);
 
     setAuthor('');
     setTitle('');
     setUrl('');
-  }
+  };
 
 
-  const renderLoginForm= ()=> {
+  const renderLoginForm= () => {
     return (
       <LoginForm handleLogin={handleLogin}
-      username={username} password={password}
-      handleUsernameChange={value => setUsername(value)}
-      handlePasswordChange= {(value) => setPassword(value)}/>
+        username={username} password={password}
+        handleUsernameChange={value => setUsername(value)}
+        handlePasswordChange= {(value) => setPassword(value)}/>
     );
-  }
+  };
 
   const renderBlogForm = () => {
     return (
       <Togglable buttonLabel="add blog" >
-        <BlogForm handleCreateBlog={createBlog} 
+        <BlogForm handleCreateBlog={createBlog}
           title={title} author={author} url={url}
           handleTitleChange={(value) => setTitle(value)}
           handleAuthorChange= {(value) => setAuthor(value)}
@@ -169,11 +169,11 @@ const App = () => {
       </Togglable>
     );
 
-  }
+  };
   const logout = () => {
     setUser(null);
-    notify('Logged out successfully', true)
-  }
+    notify('Logged out successfully', true);
+  };
 
   //renders everything once user is signed in
   const renderBlogs = () => {
@@ -183,27 +183,27 @@ const App = () => {
       <Logout user={user} clearUser={logout}/>
       <h2>Blogs</h2>
       <ol>
-        {blogs.map(b => 
-        <li key={b.id} type="I">
-          <Blog key={b.id} blog={b}
-           addLike={() => addLike(b)}
-           user={user}
-           deleteBlog={() => deleteBlog(b)}/>
-        </li>)}
+        {blogs.map(b =>
+          <li key={b.id} type="I">
+            <Blog key={b.id} blog={b}
+              addLike={() => addLike(b)}
+              user={user}
+              deleteBlog={() => deleteBlog(b)}/>
+          </li>)}
       </ol>
       {renderBlogForm()}
-    </>)
-  }
+    </>);
+  };
 
   return(
     <>
       <Notification message={promptMessage}/>
       {user === null
-      ? renderLoginForm()
-      : renderBlogs()}
+        ? renderLoginForm()
+        : renderBlogs()}
       <Footer />
     </>
-  )
-}
+  );
+};
 
 export default App;

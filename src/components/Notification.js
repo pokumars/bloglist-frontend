@@ -1,7 +1,7 @@
 import React from 'react';
 
 const Notification = (props) => {
-  const {message} = props
+  const { message } = props;
   if (message === null){
     return null;
   }
@@ -14,15 +14,15 @@ const Notification = (props) => {
     borderRadius: 5,
     padding: 10,
     marginBottom: 10
-  }
+  };
 
-  
+
 
   return (
     <div style={notificationStyle}>
       <p>{message.message}</p>
     </div>
   );
-}
+};
 
 export default Notification;

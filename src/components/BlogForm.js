@@ -1,8 +1,8 @@
 import React from 'react';
 
 const BlogForm = (props) => {
-  const {title, handleTitleChange, author, handleAuthorChange,
-     url,handleUrlChange, handleCreateBlog } = props;
+  const { title, handleTitleChange, author, handleAuthorChange,
+    url,handleUrlChange, handleCreateBlog } = props;
 
 
   return (
@@ -11,9 +11,9 @@ const BlogForm = (props) => {
         <table>
           <tbody>
             <tr>
-              <td>title</td> 
+              <td>title</td>
               <td><input value={title} type= "text" minLength="5" required
-            onChange={({ target }) => handleTitleChange(target.value)} /></td>
+                onChange={({ target }) => handleTitleChange(target.value)} /></td>
             </tr>
 
             <tr>
@@ -36,7 +36,7 @@ const BlogForm = (props) => {
         <button type="submit" >create</button>
       </form>
     </>
-  )
-}
+  );
+};
 
 export default BlogForm;
