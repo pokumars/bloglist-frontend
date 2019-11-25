@@ -177,7 +177,7 @@ const App = () => {
 
   //renders everything once user is signed in
   const renderBlogs = () => {
-    console.log(user);
+    //console.log(user);
     return (
     <>
       <Logout user={user} clearUser={logout}/>

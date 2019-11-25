@@ -7,12 +7,12 @@ const LoginForm = (props) => {
   <>
     <h2>Log in to application</h2>
     <form onSubmit={handleLogin}>
-      <div>
+      <div className="username">
         username
         <input type="text" value={username}
           onChange= {({ target }) => handleUsernameChange(target.value)}/>
       </div>
-      <div>
+      <div className="password">
         password
         <input type="password" value={password}
           onChange={({ target }) => handlePasswordChange(target.value)} />

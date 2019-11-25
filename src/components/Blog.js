@@ -13,12 +13,12 @@ const Blog = (props) => {
   };
 
   return (
-    <div style={blogstyle}>
-      <div onClick={() => setExpanded(!expanded)}>
+    <div style={blogstyle} className="blog">
+      <div onClick={() => setExpanded(!expanded)} className="blogAuthorTitle">
         {blog.title} <b>~{blog.author}</b>
       </div>
 
-      <div style = {expandStyle}>
+      <div style = {expandStyle} className="blogDetails">
         <p> {blog.likes} likes <button onClick={ addLike } >like</button> </p>
         <p><a href={blog.url}>{blog.url}</a><br/>
         added by {blog.user.name ? blog.user.name: blog.user.username}</p>
