@@ -1,8 +1,7 @@
 import React from 'react';
 
 const BlogForm = (props) => {
-  const { title, handleTitleChange, author, handleAuthorChange,
-    url,handleUrlChange, handleCreateBlog } = props;
+  const { title, author, url, handleCreateBlog } = props;
 
 
   return (
@@ -12,22 +11,19 @@ const BlogForm = (props) => {
           <tbody>
             <tr>
               <td>title</td>
-              <td><input value={title} type= "text" minLength="5" required
-                onChange={({ target }) => handleTitleChange(target.value)} /></td>
+              <td><input  minLength="5" required {...title} /></td>
             </tr>
 
             <tr>
               <td>author</td>
-              <td><input value={author} type= "text" minLength="3" required
-                onChange={({ target }) => handleAuthorChange(target.value)} />
+              <td><input minLength="3" required {...author} />
               </td>
             </tr>
 
             <tr>
               <td>url</td>
               <td>
-                <input value={url} type= "url" required
-                  onChange={({ target }) => handleUrlChange(target.value)} />
+                <input required {...url} />
               </td>
             </tr>
           </tbody>

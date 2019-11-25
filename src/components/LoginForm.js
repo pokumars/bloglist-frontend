@@ -1,9 +1,7 @@
 import React from 'react';
 
 const LoginForm = (props) => {
-  const { handleLogin,handleUsernameChange,
-    username, password, handlePasswordChange } = props;
-
+  const { handleLogin, username, password } = props;
 
   return(
   <>
@@ -11,14 +9,12 @@ const LoginForm = (props) => {
     <form onSubmit={handleLogin}>
       <div className="username">
         username
-        <input type="text" value={username}
-          onChange= {handleUsernameChange}/>
+        <input {...username}/>
       </div>
       <div className="password">
         password
         
-        <input type="password" value={password}
-          onChange={handlePasswordChange} />
+        <input {...password} />
       </div>
       <button type="submit">login</button>
 

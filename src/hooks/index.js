@@ -7,15 +7,42 @@ export const useField = (type) => {
     setValue(event.target);
   };*/
 
-  const onChange = (val) => {
-    setValue(val);
-    console.log(value);
+  const onChange = (event) => {
+    setValue(event);
+    console.log(event);
+  };
+  const reset= () => {
+    setValue('');
   };
 
   return {
     type,
     value,
-    onChange
+    onChange,
+    reset
+  };
+};
+
+export const useField2 = (type) => {
+  const [value, setValue] = useState('');
+
+  /*const onChange = (event) => {
+    setValue(event.target);
+  };*/
+
+  const onChange = (event) => {
+    setValue(event.target.value);
+    console.log(event.target.value);
+  };
+  const reset= () => {
+    setValue('');
+  };
+  
+  return {
+    type,
+    value,
+    onChange,
+    reset
   };
 };
 

@@ -8,21 +8,27 @@ import BlogForm from './components/BlogForm';
 import Notification from './components/Notification';
 import Togglable from './components/Togglable';
 import Footer from './components/Footer';
-import { useField } from './hooks/index';
+import { useField, useField2 } from './hooks/index';
 
 
 const App = () => {
   const [blogs, setBlogs] = useState([]);
+  const [user, setUser] = useState(null);
   //const [username, setUsername] = useState('');
   //const [password, setPassword] =useState('');
-  const username = useField('text');
-  const password = useField('password');
+  const username = useField2('text');
+  const password = useField2('password');
+
+  const title= useField2('text');
+  const author= useField2('text');
+  const url= useField2('url');
 
 
-  const [user, setUser] = useState(null);
-  const [title, setTitle] = useState('');
+ 
+  /*const [title, setTitle] = useState('');
   const [author, setAuthor] = useState('');
-  const [url, setUrl] = useState('');
+  const [url, setUrl] = useState('');*/
+
   const [promptMessage, setPropmptMessage] = useState(null);
 
   const getBlogsHook = () => {
@@ -76,6 +82,8 @@ const App = () => {
 
       //setUsername('');
       //setPassword('');
+      username.reset();
+      password.reset();
 
       notify(`Welcome ${user.name? user.name :user.username}`, true);
 
@@ -121,22 +129,22 @@ const App = () => {
   const createBlog = async (event) => {
     event.preventDefault();
 
-    if ( title.length<5 || author.length<3 || url.length<5) {
-      title.length<5 &&alert('title should be longer than 5 characters');
-      author.length<3  && alert('author should be longer than 3 characters');
-      url.length<10 && alert('url should be longer than 10 characters');
+    if ( title.value.length<5 || author.value.length<3 || url.value.length<5) {
+      title.value.length<5 &&alert('title should be longer than 5 characters');
+      author.value.length<3  && alert('author should be longer than 3 characters');
+      url.value.length<10 && alert('url should be longer than 10 characters');
 
       return null;
     }
 
     const newBlog = {
-      'title': title,
-      'author': author,
-      'url': url,
+      'title': title.value,
+      'author': author.value,
+      'url': url.value,
     };
 
     //console.log('new blog to be posted ', newBlog);
-    //console.log(`author--> ${author} title--> ${title} url--> ${url}`);
+    //console.log(`author--> ${author.value} title--> ${title.value} url--> ${url.value}`);
 
     const response = await blogService.create(newBlog);
 
@@ -151,30 +159,44 @@ const App = () => {
       setPropmptMessage(null);
     }, 5000);
 
-    setAuthor('');
+    /*setAuthor('');
     setTitle('');
-    setUrl('');
+    setUrl('');*/
+    author.reset();
+    title.reset();
+    url.reset();
   };
 
 
   const renderLoginForm= () => {
+    const usernameProps = Object.assign({}, username);
+    delete usernameProps.reset;
+
+    const passwordProps = Object.assign({}, password);
+    delete passwordProps.reset;
+
     return (
       
       <LoginForm handleLogin={handleLogin}
-        username={username.value} password={password.value}
-        handleUsernameChange={({ target }) => username.onChange(target.value)}
-        handlePasswordChange={({ target }) => password.onChange(target.value)}/>
+        username={ usernameProps }
+        password={passwordProps}/>
     );
   };
 
   const renderBlogForm = () => {
+    const titleProps = Object.assign({}, title);
+    delete titleProps.reset;
+
+    const authorProps = Object.assign({}, author);
+    delete authorProps.reset;
+
+    const urlProps = Object.assign({}, url);
+    delete urlProps.reset;
+
     return (
       <Togglable buttonLabel="add blog" >
         <BlogForm handleCreateBlog={createBlog}
-          title={title} author={author} url={url}
-          handleTitleChange={(value) => setTitle(value)}
-          handleAuthorChange= {(value) => setAuthor(value)}
-          handleUrlChange={(value) => setUrl(value)}/>
+          title={titleProps} author={authorProps} url={urlProps} />
       </Togglable>
     );
 
