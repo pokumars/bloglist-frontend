@@ -8,12 +8,17 @@ import BlogForm from './components/BlogForm';
 import Notification from './components/Notification';
 import Togglable from './components/Togglable';
 import Footer from './components/Footer';
+import { useField } from './hooks/index';
 
 
 const App = () => {
   const [blogs, setBlogs] = useState([]);
-  const [username, setUsername] = useState('');
-  const [password, setPassword] =useState('');
+  //const [username, setUsername] = useState('');
+  //const [password, setPassword] =useState('');
+  const username = useField('text');
+  const password = useField('password');
+
+
   const [user, setUser] = useState(null);
   const [title, setTitle] = useState('');
   const [author, setAuthor] = useState('');
@@ -55,10 +60,13 @@ const App = () => {
 
   const handleLogin = async (event) => {
     event.preventDefault();
+    
     //console.log('login with ', username, password);
+    console.log('login with ', username.value, password.value);
     try {
+      
       const user = await loginService.login({
-        username, password
+        username: username.value, password: password.value
       });
 
       setUser(user);
@@ -66,8 +74,8 @@ const App = () => {
         'loggedInUser', JSON.stringify(user)
       );
 
-      setUsername('');
-      setPassword('');
+      //setUsername('');
+      //setPassword('');
 
       notify(`Welcome ${user.name? user.name :user.username}`, true);
 
@@ -151,10 +159,11 @@ const App = () => {
 
   const renderLoginForm= () => {
     return (
+      
       <LoginForm handleLogin={handleLogin}
-        username={username} password={password}
-        handleUsernameChange={value => setUsername(value)}
-        handlePasswordChange= {(value) => setPassword(value)}/>
+        username={username.value} password={password.value}
+        handleUsernameChange={({ target }) => username.onChange(target.value)}
+        handlePasswordChange={({ target }) => password.onChange(target.value)}/>
     );
   };
 
@@ -172,7 +181,7 @@ const App = () => {
   };
   const logout = () => {
     setUser(null);
-    notify('Logged out successfully', true);
+    
   };
 
   //renders everything once user is signed in
