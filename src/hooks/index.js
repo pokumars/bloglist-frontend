@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-export const useField = (type) => {
+export const useField2 = (type) => {
   const [value, setValue] = useState('');
 
   /*const onChange = (event) => {
@@ -9,7 +9,7 @@ export const useField = (type) => {
 
   const onChange = (event) => {
     setValue(event);
-    console.log(event);
+    //console.log(event);
   };
   const reset= () => {
     setValue('');
@@ -23,7 +23,7 @@ export const useField = (type) => {
   };
 };
 
-export const useField2 = (type) => {
+export const useField = (type) => {
   const [value, setValue] = useState('');
 
   /*const onChange = (event) => {

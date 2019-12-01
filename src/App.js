@@ -8,7 +8,7 @@ import BlogForm from './components/BlogForm';
 import Notification from './components/Notification';
 import Togglable from './components/Togglable';
 import Footer from './components/Footer';
-import { useField, useField2 } from './hooks/index';
+import { useField } from './hooks/index';
 
 
 const App = () => {
@@ -16,12 +16,12 @@ const App = () => {
   const [user, setUser] = useState(null);
   //const [username, setUsername] = useState('');
   //const [password, setPassword] =useState('');
-  const username = useField2('text');
-  const password = useField2('password');
+  const username = useField('text');
+  const password = useField('password');
 
-  const title= useField2('text');
-  const author= useField2('text');
-  const url= useField2('url');
+  const title= useField('text');
+  const author= useField('text');
+  const url= useField('url');
 
 
  
@@ -68,7 +68,7 @@ const App = () => {
     event.preventDefault();
     
     //console.log('login with ', username, password);
-    console.log('login with ', username.value, password.value);
+    //console.log('login with ', username.value, password.value);
     try {
       
       const user = await loginService.login({
