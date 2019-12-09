@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import blogService from './services/blogs';
 import Blog from './components/Blog';
 import LoginForm from './components/LoginForm';
@@ -12,11 +12,10 @@ import { useField } from './hooks/index';
 import { setUser } from './reducers/userReducer';
 import { removeNotification, setNotification, notifyAsync } from './reducers/notificationReducer';
 import { connect } from 'react-redux';
-import { initialiseBlogs, addLike } from './reducers/blogsReducer';
+import { initialiseBlogs, addLike, createBlog } from './reducers/blogsReducer';
 
 
 const App = (props) => {
-  //const [blogs, setBlogs] = useState([]);
 
   // useField replaces ---> const [username, setUsername] = useState('');
   const username = useField('text');
@@ -68,21 +67,6 @@ const App = (props) => {
     }
   };
 
-  /*const addLike = async (blogObjToUpdate) => {
-
-    const blog = {
-      'title': blogObjToUpdate.title,
-      'author': blogObjToUpdate.author,
-      'url': blogObjToUpdate.url,
-      'user':blogObjToUpdate.user.id,
-      '_id': blogObjToUpdate.id,
-      'likes': blogObjToUpdate.likes + 1,
-    };
-
-    const response = await blogService.update(blog);
-
-    //setBlogs(blogs.map((b) => b.id ===blog._id.toString()? b = response : b));
-  };*/
   const addLike = (id) => {
     props.addLike(id);
   };
@@ -124,8 +108,9 @@ const App = (props) => {
 
     const response = await blogService.create(newBlog);
     //setBlogs(blogs.concat(response));
+    props.createBlog(response);
 
-    props.notifyAsync(`${response.title} has been added to blogs`, true);
+    response && props.notifyAsync(`${response.title} has been added to blogs`, true);
 
     author.reset();
     title.reset();
@@ -209,7 +194,8 @@ const mapDispatchToProps = {
   setNotification,
   notifyAsync,
   initialiseBlogs,
-  addLike
+  addLike,
+  createBlog
 };
 
 const mapStateToProps =(state) => {

@@ -6,9 +6,11 @@ const blogsReducer = (state= [], action) => {
   switch (action.type) {
   case 'INIT_BLOGS':
     return sortbyLikes(action.data);
+
   case 'ADD_BLOG':{
-    return;
+    return sortbyLikes([...state, action.data]);
   }
+
   case 'LIKE_BLOG':{
     const changedBlog= action.data;
     
@@ -16,6 +18,7 @@ const blogsReducer = (state= [], action) => {
 
     return sortbyLikes(allBlogs);
   }
+
   case 'DELETE_BLOG':
 
     return;
@@ -39,19 +42,28 @@ export const initialiseBlogs = () => {
 export const addLike = (id) => {
   return async dispatch => {
     const blogToChange = await blogService.getBlog(id);
+
     const changedBlog = {
       ...blogToChange,
       'likes': blogToChange.likes + 1,
     };
+
     const changedBlogInBackend = await blogService.update(changedBlog);
 
-  
     dispatch({
       type:'LIKE_BLOG',
       data: changedBlogInBackend
     });
   };
+};
 
-  //setBlogs(blogs.map((b) => b.id ===blog._id.toString()? b = response : b));
+export const createBlog= (blogObj) => {
+  return async dispatch => {
+    //const response = await blogService.create(blogObj);
+    dispatch({
+      type: 'ADD_BLOG',
+      data: blogObj
+    });
+  };
 };
 export default blogsReducer;
