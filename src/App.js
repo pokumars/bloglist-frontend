@@ -9,13 +9,16 @@ import Notification from './components/Notification';
 import Togglable from './components/Togglable';
 import Footer from './components/Footer';
 import { useField } from './hooks/index';
+import { setUser } from './reducers/userReducer';
+import { removeNotification, setNotification, notifyAsync } from './reducers/notificationReducer';
+import { connect } from 'react-redux';
+import { initialiseBlogs, addLike } from './reducers/blogsReducer';
 
 
-const App = () => {
-  const [blogs, setBlogs] = useState([]);
-  const [user, setUser] = useState(null);
-  //const [username, setUsername] = useState('');
-  //const [password, setPassword] =useState('');
+const App = (props) => {
+  //const [blogs, setBlogs] = useState([]);
+
+  // useField replaces ---> const [username, setUsername] = useState('');
   const username = useField('text');
   const password = useField('password');
 
@@ -23,22 +26,8 @@ const App = () => {
   const author= useField('text');
   const url= useField('url');
 
-
- 
-  /*const [title, setTitle] = useState('');
-  const [author, setAuthor] = useState('');
-  const [url, setUrl] = useState('');*/
-
-  const [promptMessage, setPropmptMessage] = useState(null);
-
   const getBlogsHook = () => {
-    const getBlogs = async () => {
-      const blogs = await blogService.getAll();
-      const sortedBlogs = blogs.sort((a, b) => a.likes - b.likes);
-      setBlogs(sortedBlogs);
-      console.log(blogs);
-    };
-    getBlogs();
+    props.initialiseBlogs();
   };
   useEffect(getBlogsHook, []);
 
@@ -47,53 +36,39 @@ const App = () => {
 
     if(loggedInUser){
       const user = JSON.parse(loggedInUser);
-      setUser(user);
+      props.setUser(user);
+      //console.log('user in local storage',user);
       blogService.setToken(user.token);
     }
   };
   useEffect(getBrowserTokenHook, []);
 
-  const notify= (msg, positive) => {
-    setPropmptMessage({
-      message: msg,
-      positive: positive
-    });
-
-    setTimeout(() => {
-      setPropmptMessage(null);
-    }, 5000);
-  };
-
   const handleLogin = async (event) => {
     event.preventDefault();
-    
-    //console.log('login with ', username, password);
-    //console.log('login with ', username.value, password.value);
+
     try {
       
       const user = await loginService.login({
         username: username.value, password: password.value
       });
 
-      setUser(user);
+      props.setUser(user);
       window.localStorage.setItem(
         'loggedInUser', JSON.stringify(user)
       );
 
-      //setUsername('');
-      //setPassword('');
       username.reset();
       password.reset();
 
-      notify(`Welcome ${user.name? user.name :user.username}`, true);
+      props.notifyAsync(`Welcome ${user.name? user.name :user.username}`, true);
 
       blogService.setToken(user.token);
     } catch (error) {
-      notify('wrong credentials', false);
+      props.notifyAsync('wrong credentials', false);
     }
   };
 
-  const addLike = async (blogObjToUpdate) => {
+  /*const addLike = async (blogObjToUpdate) => {
 
     const blog = {
       'title': blogObjToUpdate.title,
@@ -106,7 +81,10 @@ const App = () => {
 
     const response = await blogService.update(blog);
 
-    setBlogs(blogs.map((b) => b.id ===blog._id.toString()? b = response : b));
+    //setBlogs(blogs.map((b) => b.id ===blog._id.toString()? b = response : b));
+  };*/
+  const addLike = (id) => {
+    props.addLike(id);
   };
 
   const deleteBlog = async (blog) => {
@@ -115,15 +93,13 @@ const App = () => {
       if(confirmMessage) {
         const response = await blogService.deleteBlog(blog.id);
         console.log(response);
-        notify('deleted successfully', true);
-        setBlogs(blogs.filter((b) => b.id !== blog.id));
+        props.notifyAsync('deleted successfully', true);
+        //setBlogs(blogs.filter((b) => b.id !== blog.id));
       }
 
     } catch (error) {
-      notify('deletion failed', false);
+      props.notifyAsync('deletion failed', false);
     }
-
-
   };
 
   const createBlog = async (event) => {
@@ -147,21 +123,10 @@ const App = () => {
     //console.log(`author--> ${author.value} title--> ${title.value} url--> ${url.value}`);
 
     const response = await blogService.create(newBlog);
+    //setBlogs(blogs.concat(response));
 
-    setBlogs(blogs.concat(response));
+    props.notifyAsync(`${response.title} has been added to blogs`, true);
 
-    setPropmptMessage({
-      message: `${response.title} has been added to blogs`,
-      positive: true
-    });
-
-    setTimeout(() => {
-      setPropmptMessage(null);
-    }, 5000);
-
-    /*setAuthor('');
-    setTitle('');
-    setUrl('');*/
     author.reset();
     title.reset();
     url.reset();
@@ -169,6 +134,7 @@ const App = () => {
 
 
   const renderLoginForm= () => {
+    //The input element should not be given a reset attribute. delete that
     const usernameProps = Object.assign({}, username);
     delete usernameProps.reset;
 
@@ -202,7 +168,7 @@ const App = () => {
 
   };
   const logout = () => {
-    setUser(null);
+    props.setUser(null);
     
   };
 
@@ -211,14 +177,14 @@ const App = () => {
     //console.log(user);
     return (
     <>
-      <Logout user={user} clearUser={logout}/>
+      <Logout user={props.user} clearUser={logout}/>
       <h2>Blogs</h2>
       <ol>
-        {blogs.map(b =>
+        {props.blogs.map(b =>
           <li key={b.id} type="I">
             <Blog key={b.id} blog={b}
-              addLike={() => addLike(b)}
-              user={user}
+              addLike={() => addLike(b.id)}
+              user={props.user}
               deleteBlog={() => deleteBlog(b)}/>
           </li>)}
       </ol>
@@ -228,8 +194,8 @@ const App = () => {
 
   return(
     <>
-      <Notification message={promptMessage}/>
-      {user === null
+      <Notification message={props.promptMessage}/>
+      {props.user === null
         ? renderLoginForm()
         : renderBlogs()}
       <Footer />
@@ -237,4 +203,24 @@ const App = () => {
   );
 };
 
-export default App;
+const mapDispatchToProps = {
+  setUser,
+  removeNotification,
+  setNotification,
+  notifyAsync,
+  initialiseBlogs,
+  addLike
+};
+
+const mapStateToProps =(state) => {
+  return {
+    user: state.user,
+    promptMessage: state.notification,
+    blogs: state.blogs
+  };
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(App);
