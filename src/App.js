@@ -12,7 +12,7 @@ import { useField } from './hooks/index';
 import { setUser } from './reducers/userReducer';
 import { removeNotification, setNotification, notifyAsync } from './reducers/notificationReducer';
 import { connect } from 'react-redux';
-import { initialiseBlogs, addLike, createBlog } from './reducers/blogsReducer';
+import { initialiseBlogs, addLike, createBlog, deleteBlog } from './reducers/blogsReducer';
 
 
 const App = (props) => {
@@ -73,16 +73,20 @@ const App = (props) => {
 
   const deleteBlog = async (blog) => {
     try {
-      const confirmMessage = window.confirm(`Remove ${blog.title}`);
-      if(confirmMessage) {
+      const confirmDelete = window.confirm(`Remove ${blog.title}`);
+      if(confirmDelete) {
         const response = await blogService.deleteBlog(blog.id);
-        console.log(response);
-        props.notifyAsync('deleted successfully', true);
+        //console.log(response);
+        //console.log('blog.id---->',blog.id);
+        props.deleteBlog(blog.id);
+        response && props.notifyAsync('deleted successfully', true);
         //setBlogs(blogs.filter((b) => b.id !== blog.id));
+        
       }
 
     } catch (error) {
       props.notifyAsync('deletion failed', false);
+      console.error(error);
     }
   };
 
@@ -106,8 +110,8 @@ const App = (props) => {
     //console.log('new blog to be posted ', newBlog);
     //console.log(`author--> ${author.value} title--> ${title.value} url--> ${url.value}`);
 
+    //this is done here so that I can give notification ONLY when post request succeeds
     const response = await blogService.create(newBlog);
-    //setBlogs(blogs.concat(response));
     props.createBlog(response);
 
     response && props.notifyAsync(`${response.title} has been added to blogs`, true);
@@ -195,7 +199,8 @@ const mapDispatchToProps = {
   notifyAsync,
   initialiseBlogs,
   addLike,
-  createBlog
+  createBlog,
+  deleteBlog
 };
 
 const mapStateToProps =(state) => {
