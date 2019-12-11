@@ -1,22 +1,25 @@
 import React, { useEffect } from 'react';
 import blogService from './services/blogs';
-import Blog from './components/Blog';
 import LoginForm from './components/LoginForm';
-import Logout from './components/Logout';
 import loginService from './services/login';
 import BlogForm from './components/BlogForm';
 import Notification from './components/Notification';
 import Togglable from './components/Togglable';
 import Footer from './components/Footer';
+import { connect } from 'react-redux';
 import { useField } from './hooks/index';
 import { setUser } from './reducers/userReducer';
 import { removeNotification, setNotification, notifyAsync } from './reducers/notificationReducer';
-import { connect } from 'react-redux';
+import { getUsers } from './reducers/allUsersReducer';
 import { initialiseBlogs, addLike, createBlog, deleteBlog } from './reducers/blogsReducer';
+import UserList from './components/UserList';
+import BlogList from './components/BlogList';
+import { BrowserRouter as Router, Link,  Route } from 'react-router-dom';
+import Blog from './components/Blog';
+import User from './components/User';
 
 
 const App = (props) => {
-
   // useField replaces ---> const [username, setUsername] = useState('');
   const username = useField('text');
   const password = useField('password');
@@ -25,10 +28,11 @@ const App = (props) => {
   const author= useField('text');
   const url= useField('url');
 
-  const getBlogsHook = () => {
+  const getBlogsAndUsersHook = () => {
     props.initialiseBlogs();
+    props.getUsers();
   };
-  useEffect(getBlogsHook, []);
+  useEffect(getBlogsAndUsersHook, []);
 
   const getBrowserTokenHook = () => {
     const loggedInUser = window.localStorage.getItem('loggedInUser');
@@ -41,6 +45,8 @@ const App = (props) => {
     }
   };
   useEffect(getBrowserTokenHook, []);
+
+  const userById=(id) => props.allUsers.find(u => u.id === id);
 
   const handleLogin = async (event) => {
     event.preventDefault();
@@ -65,10 +71,6 @@ const App = (props) => {
     } catch (error) {
       props.notifyAsync('wrong credentials', false);
     }
-  };
-
-  const addLike = (id) => {
-    props.addLike(id);
   };
 
   const deleteBlog = async (blog) => {
@@ -158,35 +160,45 @@ const App = (props) => {
   };
   const logout = () => {
     props.setUser(null);
-    
   };
 
-  //renders everything once user is signed in
   const renderBlogs = () => {
     //console.log(user);
     return (
-    <>
-      <Logout user={props.user} clearUser={logout}/>
-      <h2>Blogs</h2>
-      <ol>
-        {props.blogs.map(b =>
-          <li key={b.id} type="I">
-            <Blog key={b.id} blog={b}
-              addLike={() => addLike(b.id)}
-              user={props.user}
-              deleteBlog={() => deleteBlog(b)}/>
-          </li>)}
-      </ol>
-      {renderBlogForm()}
-    </>);
+      <div>      
+        <BlogList user={props.user}
+          blogs={props.blogs}
+          logout={logout}
+          addLike={props.addLike}
+          deleteBlog={deleteBlog}
+        />
+        {renderBlogForm()}
+      </div>
+    );
   };
+
+  const padding = { padding: 5 };
 
   return(
     <>
-      <Notification message={props.promptMessage}/>
-      {props.user === null
-        ? renderLoginForm()
-        : renderBlogs()}
+      <Router>
+        <div>
+          <Link style={padding} to="/">home</Link>
+          <Link style={padding} to="/users">users</Link>
+        </div>
+
+        <Route exact path="/" > 
+          {props.user === null
+            ? renderLoginForm()
+            : renderBlogs()}
+        </Route>
+        <Route exact path="/users" render={() => <UserList users={props.allUsers}/>} />
+        {<Route path="/users/:id" render={({ match }) => 
+          <User user={userById(match.params.id)}/>} />}
+      </Router>
+
+      <Notification message={props.promptMessage}/>      
+  
       <Footer />
     </>
   );
@@ -200,14 +212,16 @@ const mapDispatchToProps = {
   initialiseBlogs,
   addLike,
   createBlog,
-  deleteBlog
+  deleteBlog,
+  getUsers
 };
 
 const mapStateToProps =(state) => {
   return {
     user: state.user,
     promptMessage: state.notification,
-    blogs: state.blogs
+    blogs: state.blogs,
+    allUsers: state.allUsers
   };
 };
 

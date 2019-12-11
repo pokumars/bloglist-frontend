@@ -30,16 +30,27 @@ const create = async (newBlog) => {
 };
 
 const update = async (blogToUpdate) => {
-  const response = await axios.put(`${baseUrl}/${blogToUpdate._id? blogToUpdate._id: blogToUpdate.id}`, blogToUpdate);
+  /*The extra fetch is needed to get the modified .user value of the blog obj to 
+  display who added it and if the delete button should be rendered*/
 
-  return response.data;
+  return axios.put(`${baseUrl}/${blogToUpdate._id? blogToUpdate._id: blogToUpdate.id}`, blogToUpdate)
+    .then((res) => {
+      console.log('res in update service',res);
+      return getBlog(`${res.data._id? res.data._id: res.data.id}`);
+    })
+    .catch((err) => console.log(err));
+
+
+  //const response = await axios.put(`${baseUrl}/${blogToUpdate._id? blogToUpdate._id: blogToUpdate.id}`, blogToUpdate);
+  //const returnVal = await getBlog(`${blogToUpdate._id? blogToUpdate._id: blogToUpdate.id}`);
+  //return returnVal;
 };
 
 const deleteBlog = async (id) => {
   const config = {
     headers: { Authorization: token }
   };
-  console.log('delete request');
+  console.log('delete request token', token);
   const response = await axios.delete(`${baseUrl}/${id}`, config);
   console.log('delete request response', response);
   return response;

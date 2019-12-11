@@ -1,5 +1,4 @@
 import blogService from '../services/blogs';
-import userService from '../services/users';
 
 const sortbyLikes =(initiallArr) => initiallArr.sort((a, b) => b.likes - a.likes);
 
@@ -21,7 +20,9 @@ const blogsReducer = (state= [], action) => {
   }
 
   case 'DELETE_BLOG':{
+    console.log(`id --${action.id}  type--${action.id.type}`);
     const blogsNow = state.filter((b) => b.id !== action.id);
+    console.log(blogsNow);
     return sortbyLikes(blogsNow);
   }
       
@@ -63,7 +64,6 @@ export const addLike = (id) => {
 
 export const createBlog= (blogObj) => {
   return async dispatch => {
-    //const user = await blogService.
     /*add user obj to newly created blog else it cant find user and
      thus cant render delete button based on who created it*/
     const loggedInUser = window.localStorage.getItem('loggedInUser');
@@ -79,9 +79,12 @@ export const createBlog= (blogObj) => {
 
 
 export const deleteBlog = (id) => {
-  return {
-    type: 'DELETE_BLOG',
-    id: id
+  return async dispatch => {
+
+    dispatch({
+      type: 'DELETE_BLOG',
+      id: id
+    });
   };
 };
 export default blogsReducer;
