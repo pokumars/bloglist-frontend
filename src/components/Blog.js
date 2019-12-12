@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
-import { BrowserRouter as Router, Route, Link, withRouter } from 'react-router-dom'
+import { BrowserRouter as Router, Route, Link, withRouter } from 'react-router-dom';
+import CommentList from './CommentList';
 
 
 const BlogwithoutHistory = (props) => {
   
-  const { blog, addLike, deleteBlog, user } = props;
+  const { blog, addLike, deleteBlog, user, commentField, handleAddComment } = props;
   const [expanded, setExpanded] = useState(false);
 
   if ( blog === undefined) {//prevents crashing until blog has been received by app 
@@ -25,6 +26,7 @@ const BlogwithoutHistory = (props) => {
   };
 
   return (
+    <>
     <div style={blogstyle} className="blog">
       <div onClick={() => setExpanded(!expanded)} className="blogAuthorTitle">
         {blog.title} <b>~{blog.author}</b>
@@ -38,6 +40,9 @@ const BlogwithoutHistory = (props) => {
           style={showDeleteStyle}>delete</button>
       </div>
     </div>
+    <CommentList blog={blog} handleAddComment={handleAddComment}/>
+    
+    </>
   );
 };
 

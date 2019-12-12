@@ -18,6 +18,14 @@ const blogsReducer = (state= [], action) => {
 
     return sortbyLikes(allBlogs);
   }
+  case 'ADD_COMMENT':{
+    const changedBlog= action.data;
+    
+    const allBlogs = state.map((b) => b.id === changedBlog.id? b = changedBlog : b);
+
+    return sortbyLikes(allBlogs);
+  }
+  
 
   case 'DELETE_BLOG':{
     console.log(`id --${action.id}  type--${action.id.type}`);
@@ -57,6 +65,26 @@ export const addLike = (id) => {
 
     dispatch({
       type:'LIKE_BLOG',
+      data: changedBlogInBackend
+    });
+  };
+};
+
+export const addComment = (updatedBlog) => {
+ 
+  return async dispatch => {
+    console.log('action creator updatedBlog',updatedBlog);
+    //const bloginBackend = await blogService.getBlog(updatedBlog.id);
+
+    
+    //change user from userobject to id else backend doesnt know what to do with it
+    const blogCreatorId = updatedBlog.user.id;
+    updatedBlog.user= blogCreatorId;
+
+    const changedBlogInBackend = await blogService.update(updatedBlog);
+
+    dispatch({
+      type:'ADD_COMMENT',
       data: changedBlogInBackend
     });
   };

@@ -11,7 +11,7 @@ import { useField } from './hooks/index';
 import { setUser } from './reducers/userReducer';
 import { removeNotification, setNotification, notifyAsync } from './reducers/notificationReducer';
 import { getUsers } from './reducers/allUsersReducer';
-import { initialiseBlogs, addLike, createBlog, deleteBlog } from './reducers/blogsReducer';
+import { initialiseBlogs, addLike, createBlog, deleteBlog, addComment } from './reducers/blogsReducer';
 import UserList from './components/UserList';
 import BlogList from './components/BlogList';
 import { BrowserRouter as Router, Link,  Route } from 'react-router-dom';
@@ -27,6 +27,10 @@ const App = (props) => {
   const title= useField('text');
   const author= useField('text');
   const url= useField('url');
+
+  /*const comment = useField('text');
+  const commentFieldProps = Object.assign({}, comment);
+  delete commentFieldProps.reset;*/
 
   const getBlogsAndUsersHook = () => {
     props.initialiseBlogs();
@@ -190,26 +194,30 @@ const App = (props) => {
         </div>
         <Notification message={props.promptMessage}/> 
 
-        <Route exact path="/" > 
+        <Route exact path="/" >
           {props.user === null
             ? renderLoginForm()
             : renderBlogs()}
         </Route>
+
         <Route exact path="/users" render={() => <UserList users={props.allUsers}/>} />
+        
         {<Route path="/users/:id" render={({ match }) => 
           <User user={userById(match.params.id)}/>} />}
 
-        {<Route path="/blogs/:id" render={({ match }) => 
+        <Route path="/blogs/:id" render={({ match }) => 
           <Blog blog={blogById(match.params.id)}
             addLike={() => props.addLike(match.params.id)}
-            user={props.user}
-            deleteBlog={deleteBlog}/>} />}
+            user={props.user} handleAddComment={props.addComment}
+            deleteBlog={deleteBlog}/>} />
       </Router>
 
       <Footer />
     </>
   );
 };
+/** commentField={commentFieldProps}
+            handleAddComment={addCommentToBlog} */
 
 const mapDispatchToProps = {
   setUser,
@@ -220,7 +228,8 @@ const mapDispatchToProps = {
   addLike,
   createBlog,
   deleteBlog,
-  getUsers
+  getUsers,
+  addComment
 };
 
 const mapStateToProps =(state) => {
