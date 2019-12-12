@@ -1,7 +1,6 @@
 import React from 'react';
 import { BrowserRouter as Router, Link,  Route } from 'react-router-dom';
 
-
 const UserList = (props) => {
 
   return (
@@ -46,6 +45,14 @@ const UserList = (props) => {
       /**{props.users.map((u) => <tr key={u.id}>
             <td>{u.name? u.name : u.username}</td>
             <td>{u.blogs.length}</td>
-          </tr>)} */
+          </tr>)}
+          
+          
+          
+          
+          
+          <Link key={u.id} to={`/users/${u.id}`}>
+                {u.name? u.name : u.username}
+              </Link>*/
 
 export default UserList;

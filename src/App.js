@@ -47,6 +47,7 @@ const App = (props) => {
   useEffect(getBrowserTokenHook, []);
 
   const userById=(id) => props.allUsers.find(u => u.id === id);
+  const blogById = (id) => props.blogs.find(b => b.id === id);
 
   const handleLogin = async (event) => {
     event.preventDefault();
@@ -181,11 +182,13 @@ const App = (props) => {
 
   return(
     <>
+         
       <Router>
         <div>
           <Link style={padding} to="/">home</Link>
           <Link style={padding} to="/users">users</Link>
         </div>
+        <Notification message={props.promptMessage}/> 
 
         <Route exact path="/" > 
           {props.user === null
@@ -195,10 +198,14 @@ const App = (props) => {
         <Route exact path="/users" render={() => <UserList users={props.allUsers}/>} />
         {<Route path="/users/:id" render={({ match }) => 
           <User user={userById(match.params.id)}/>} />}
+
+        {<Route path="/blogs/:id" render={({ match }) => 
+          <Blog blog={blogById(match.params.id)}
+            addLike={() => props.addLike(match.params.id)}
+            user={props.user}
+            deleteBlog={deleteBlog}/>} />}
       </Router>
 
-      <Notification message={props.promptMessage}/>      
-  
       <Footer />
     </>
   );
