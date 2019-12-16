@@ -188,10 +188,10 @@ const App = (props) => {
     <>
          
       <Router>
-        <div>
+        {props.user && <div>
           <Link style={padding} to="/">home</Link>
           <Link style={padding} to="/users">users</Link>
-        </div>
+        </div>}
         <Notification message={props.promptMessage}/> 
 
         <Route exact path="/" >

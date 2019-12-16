@@ -11,25 +11,25 @@ const BlogForm = (props) => {
           <tbody>
             <tr>
               <td>title</td>
-              <td><input  minLength="5" required {...title} /></td>
+              <td><input id="titleInput" minLength="5" required {...title} /></td>
             </tr>
 
             <tr>
               <td>author</td>
-              <td><input minLength="3" required {...author} />
+              <td><input id="authorInput" minLength="3" required {...author} />
               </td>
             </tr>
 
             <tr>
               <td>url</td>
               <td>
-                <input required {...url} />
+                <input id="urlInput" required {...url} />
               </td>
             </tr>
           </tbody>
         </table>
 
-        <button type="submit" >create</button>
+        <button type="submit" id="createBlogBtn" >create</button>
       </form>
     </>
   );

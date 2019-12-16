@@ -9,12 +9,12 @@ const LoginForm = (props) => {
     <form onSubmit={handleLogin}>
       <div className="username">
         username
-        <input {...username}/>
+        <input id="usernameInput" {...username}/>
       </div>
       <div className="password">
         password
         
-        <input {...password} />
+        <input id="passwordInput" {...password} />
       </div>
       <button type="submit">login</button>
 
