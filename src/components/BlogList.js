@@ -26,39 +26,5 @@ const BlogList = (props) => {
   </>
   );
 };
-/**{props.blogs.map(b =>
-        <li key={b.id} type="I">
-          <Blog key={b.id} blog={b}
-            addLike={() => props.addLike(b.id)}
-            user={props.user}
-            deleteBlog={() => props.deleteBlog(b)}/>
-        </li>)} */
-
-
-
-/**<li>
-        {
-          props.users.map((u) => {
-            return <Link key={u.id} to={``}>
-              
-            </Link>;
-          })
-        }
-      </li> */
-
-
-
-/**{props.users.map((u) => <tr key={u.id}>
-            <td>{u.name? u.name : u.username}</td>
-            <td>{u.blogs.length}</td>
-          </tr>)}
-          
-          
-          
-          
-          
-          <Link key={u.id} to={`/users/${u.id}`}>
-                {u.name? u.name : u.username}
-              </Link>*/
 
 export default BlogList;

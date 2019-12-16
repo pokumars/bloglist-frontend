@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { BrowserRouter as Router, Route, Link, withRouter } from 'react-router-dom';
 import CommentList from './CommentList';
+import { Button } from 'react-bootstrap';
 
 
 const BlogwithoutHistory = (props) => {
@@ -33,11 +34,11 @@ const BlogwithoutHistory = (props) => {
       </div>
 
       <div className="blogDetails">
-        <p> {blog.likes} likes <button onClick={ addLike } >like</button> </p>
+        <p> {blog.likes} likes <Button onClick={ addLike } >like</Button> </p>
         <p><a href={blog.url}>{blog.url}</a><br/>
         added by {blog.user.name ? blog.user.name: blog.user.username}</p>
-        <button onClick={deleteAndRedirect}
-          style={showDeleteStyle}>delete</button>
+        <Button variant="danger" size="sm" onClick={deleteAndRedirect}
+          style={showDeleteStyle}>delete</Button>
       </div>
     </div>
     <CommentList blog={blog} handleAddComment={handleAddComment}/>

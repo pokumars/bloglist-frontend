@@ -185,7 +185,7 @@ const App = (props) => {
   const padding = { padding: 5 };
 
   return(
-    <>
+    <div className="container">
          
       <Router>
         {props.user && <div>
@@ -213,7 +213,7 @@ const App = (props) => {
       </Router>
 
       <Footer />
-    </>
+    </div>
   );
 };
 /** commentField={commentFieldProps}

@@ -1,6 +1,6 @@
 import React from 'react';
 import { useField } from '../hooks';
-import blogsReducer from '../reducers/blogsReducer';
+import { Button } from 'react-bootstrap';
 
 
 //{ commentField, handleAddComment, blog }
@@ -23,7 +23,7 @@ const CommentForm = ({ blog, handleAddComment }) => {
   return (
   <>
     <form onSubmit={modifyBlog}>
-      <input required {...commentFieldProps} /> <button type="submit">add comment</button>
+      <input required {...commentFieldProps} /> <Button  type="submit">add comment</Button>
     </form>
   </>
   );

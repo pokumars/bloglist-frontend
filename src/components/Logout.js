@@ -1,4 +1,5 @@
 import React from 'react';
+import { Button } from 'react-bootstrap';
 
 const Logout = (props) => {
   const { user, clearUser } = props;
@@ -12,7 +13,7 @@ const Logout = (props) => {
   return(
     <>
       {user.name? user.name: user.username} is logged in
-      <button onClick={logMeOut}>logout</button>
+      <Button variant="outline-danger" size="sm" onClick={logMeOut}>logout</Button>
     </>
   );
 };

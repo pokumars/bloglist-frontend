@@ -1,4 +1,5 @@
 import React from 'react';
+import { Form, Button } from 'react-bootstrap';
 
 const LoginForm = (props) => {
   const { handleLogin, username, password } = props;
@@ -6,19 +7,23 @@ const LoginForm = (props) => {
   return(
   <>
     <h2>Log in to application</h2>
-    <form onSubmit={handleLogin}>
-      <div className="username">
-        username
-        <input id="usernameInput" {...username}/>
-      </div>
-      <div className="password">
-        password
-        
-        <input id="passwordInput" {...password} />
-      </div>
-      <button type="submit">login</button>
-
-    </form>
+    <Form onSubmit={handleLogin}>
+      <Form.Group >
+        <div className="username">
+          <Form.Label>username</Form.Label>
+          <Form.Control
+            id="usernameInput" {...username}
+          />
+        </div>
+        <div className="password">
+          <Form.Label>password</Form.Label>
+          <Form.Control
+            id="passwordInput" {...password}
+          />
+        </div>
+        <Button type="submit">login</Button>
+      </Form.Group>
+    </Form>
   </>
   );
 };
