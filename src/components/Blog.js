@@ -18,7 +18,7 @@ const BlogwithoutHistory = (props) => {
   const blogstyle = {
     borderLeft: '6px solid #1a8cff',
     backgroundColor: 'lightgray',
-    margin: '5px 0px'
+    padding: '10px 5px'
   };
 
   const deleteAndRedirect = () => {
@@ -27,23 +27,25 @@ const BlogwithoutHistory = (props) => {
   };
 
   return (
-    <>
-    <div style={blogstyle} className="blog">
-      <div onClick={() => setExpanded(!expanded)} className="blogAuthorTitle">
-        {blog.title} <b>~{blog.author}</b>
-      </div>
+    <div>
+      <div style={blogstyle} className="blog">
+        <div onClick={() => setExpanded(!expanded)} className="blogAuthorTitle">
+          {blog.title} <b>~{blog.author}</b>
+        </div>
 
-      <div className="blogDetails">
-        <p> {blog.likes} likes <Button onClick={ addLike } >like</Button> </p>
-        <p><a href={blog.url}>{blog.url}</a><br/>
-        added by {blog.user.name ? blog.user.name: blog.user.username}</p>
-        <Button variant="danger" size="sm" onClick={deleteAndRedirect}
-          style={showDeleteStyle}>delete</Button>
+        <div className="blogDetails">
+          <p> {blog.likes} likes </p>
+          <p><a href={blog.url}>{blog.url}</a><br/>
+          added by {blog.user.name ? blog.user.name: blog.user.username}</p>
+          <Button variant="danger" onClick={deleteAndRedirect}
+            style={showDeleteStyle}>delete</Button>
+
+          <Button onClick={ addLike } style={{ marginLeft:10 }}>like</Button>
+        </div>
       </div>
-    </div>
-    <CommentList blog={blog} handleAddComment={handleAddComment}/>
+      <CommentList blog={blog} handleAddComment={handleAddComment}/>
     
-    </>
+    </div>
   );
 };
 

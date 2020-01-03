@@ -212,7 +212,7 @@ const App = (props) => {
             deleteBlog={deleteBlog}/>} />
       </Router>
 
-      <Footer />
+      <Footer user={props.user}/>
     </div>
   );
 };

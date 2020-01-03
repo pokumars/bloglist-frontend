@@ -24,6 +24,9 @@ const LoginForm = (props) => {
         <Button type="submit">login</Button>
       </Form.Group>
     </Form>
+    <h2>About</h2>
+    <p>Add blogs and articles that you find interestng here.
+       They can be commented on and liked. The original poster can delete. </p>
   </>
   );
 };

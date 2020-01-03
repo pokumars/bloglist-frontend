@@ -1,6 +1,6 @@
 import React from 'react';
 
-const Footer = () => {
+const Footer = (props) => {
   const footerStyle= {
     color: 'red',
     fontStyle: 'italic',
@@ -11,7 +11,7 @@ const Footer = () => {
         <>
             <div style={footerStyle}>
               <br/>
-              <p>to test this out you can use  username: &quot;mojo&quot; and password: &quot;chelsea2005&quot;</p>
+              {!props.user && <p >to test this out you can use  username: &quot;mojo&quot; and password: &quot;chelsea2005&quot;</p>}
 
             </div>
         </>

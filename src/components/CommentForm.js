@@ -1,6 +1,6 @@
 import React from 'react';
 import { useField } from '../hooks';
-import { Button } from 'react-bootstrap';
+import { Button, Form, Row, Col } from 'react-bootstrap';
 
 
 //{ commentField, handleAddComment, blog }
@@ -22,9 +22,18 @@ const CommentForm = ({ blog, handleAddComment }) => {
 
   return (
   <>
-    <form onSubmit={modifyBlog}>
-      <input required {...commentFieldProps} /> <Button  type="submit">add comment</Button>
-    </form>
+  <Form onSubmit={modifyBlog}>
+    <Row>
+      <Col>
+        <Form.Control
+          required {...commentFieldProps} placeholder="add anonymous comment here"
+        />
+      </Col>
+      <Col>
+        <Button  type="submit" >add comment</Button>
+      </Col>
+    </Row>
+  </Form>
   </>
   );
 };
